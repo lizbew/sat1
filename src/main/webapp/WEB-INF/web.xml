@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app
+        xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+        metadata-complete="false"
+        version="3.1">
+
+    <display-name>ReqTrack WebApp</display-name>
+
+    <!--
+    <context-param>
+        <param-name>org.eclipse.jetty.server.context.ManagedAttributes</param-name>
+        <param-value>PushFilter,QoSFilter,TransparentProxy.ThreadPool,TransparentProxy.HttpClient</param-value>
+    </context-param>
+    -->
+
+    <!-- Declare TestListener, which declares TestFilter -->
+    <!--
+    <listener>
+        <listener-class>com.acme.TestListener</listener-class>
+    </listener>
+    -->
+
+    <!--
+    <filter>
+        <filter-name>PushFilter</filter-name>
+        <filter-class>org.eclipse.jetty.servlets.PushCacheFilter</filter-class>
+        <async-supported>true</async-supported>
+    </filter>
+    <filter-mapping>
+        <filter-name>PushFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
+        <filter-name>QoSFilter</filter-name>
+        <filter-class>org.eclipse.jetty.servlets.QoSFilter</filter-class>
+        <async-supported>true</async-supported>
+        <init-param>
+            <param-name>maxRequests</param-name>
+            <param-value>10000</param-value>
+        </init-param>
+        <init-param>
+            <param-name>managedAttr</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>QoSFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+
+    <filter>
+        <filter-name>MultiPart</filter-name>
+        <filter-class>org.eclipse.jetty.servlets.MultiPartFilter</filter-class>
+        <async-supported>true</async-supported>
+        <init-param>
+            <param-name>deleteFiles</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>MultiPart</filter-name>
+        <url-pattern>/dump/*</url-pattern>
+    </filter-mapping>
+    -->
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/spring/spring-context.xml</param-value>
+    </context-param>
+
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/view/*</url-pattern>
+    </filter-mapping>
+
+    <servlet>
+        <servlet-name>ReqTrackServlet</servlet-name>
+        <servlet-class>com.viifly.wba.servlet.ReqTrackServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ReqTrackServlet</servlet-name>
+        <url-pattern>/ta</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>PageViewCounterServlet</servlet-name>
+        <servlet-class>com.viifly.wba.servlet.PageViewCounterServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PageViewCounterServlet</servlet-name>
+        <url-pattern>/pv.js</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>springmvc</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring/springmvc-servlet.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>springmvc</servlet-name>
+        <url-pattern>/view/*</url-pattern>
+    </servlet-mapping>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+</web-app>

@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+    <title>test</title>
+    <script src="./pv.js"></script>
+</head>
+<body>
+<ul>
+    <li><a href="./ta">track</a></li>
+</ul>
+<div>
+    page value count: <span id="page_view_count"></span>
+</div>
+<script src="http://cdn.staticfile.org/jquery/2.2.1/jquery.min.js"></script>
+
+<script>
+$(function(){
+    if (window.papa_pv) {
+        $('#page_view_count').html(window.papa_pv);
+    }
+});
+</script>
+</body>
+</html>
