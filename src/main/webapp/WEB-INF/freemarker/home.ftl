@@ -163,7 +163,7 @@
           '_csrf': $('#csrf_token').val()
         };
 
-        $.post('/Sat1/view/users', data, function(retdata){
+        $.post('/sat1/view/users', data, function(retdata){
           if (window.console) {
             console.log(retdata);
           }

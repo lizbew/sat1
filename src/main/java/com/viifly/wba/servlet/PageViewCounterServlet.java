@@ -2,8 +2,10 @@ package com.viifly.wba.servlet;
 
 import com.viifly.wba.service.CounterService;
 import com.viifly.wba.service.MongoService;
-import com.viifly.wba.service.ServiceManager;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +16,19 @@ import java.io.IOException;
 public class PageViewCounterServlet extends HttpServlet {
     public static final String HEADER_REFERER = "Referer";
 
+    @Autowired
+    private MongoService mongoService;
+
+    @Autowired
+    private CounterService counterService;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pageUrl = req.getHeader(HEADER_REFERER);
@@ -23,10 +38,8 @@ public class PageViewCounterServlet extends HttpServlet {
             return;
         }
 
-        MongoService mongoService = ServiceManager.getInstance().getMongoService();
         //int count = mongoService.increasePageView(pageUrl);
         mongoService.saveMap("test", ReqTrackDocumentBuilder.buildFromRequest(req));
-        CounterService counterService = ServiceManager.getInstance().getCounterService();
         long count = counterService.increaseAndGetCount(pageUrl);
 
         resp.setContentType("application/x-javascript; charset=utf-8");

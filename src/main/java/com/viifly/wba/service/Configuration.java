@@ -1,18 +1,22 @@
-package com.viifly.wba;
+package com.viifly.wba.service;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+@Component
 public class Configuration {
     private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 
     public static final String PROPS_FILE = "/config.properties";
     private Properties props;
 
+    @PostConstruct
     public void load() throws IOException {
         props = new Properties();
 
@@ -31,6 +35,5 @@ public class Configuration {
     public String getValue(String key) {
         return props.getProperty(key);
     }
-
 
 }

@@ -1,9 +1,12 @@
 package com.viifly.wba.service;
 
+import org.springframework.stereotype.Service;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-public class CounterServiceImpl implements CounterService{
+@Service
+public class CounterServiceImpl implements CounterService {
     private ConcurrentHashMap<String, AtomicLong> counterMap = new ConcurrentHashMap();
 
     @Override

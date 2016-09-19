@@ -1,5 +1,12 @@
 package com.viifly.wba.servlet;
 
+import com.viifly.wba.service.MongoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -7,13 +14,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Enumeration;
 
-import com.viifly.wba.service.MongoService;
-import com.viifly.wba.service.ServiceManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class ReqTrackServlet extends HttpServlet{
     final static Logger logger = LoggerFactory.getLogger(ReqTrackServlet.class);
+
+    @Autowired
+    private MongoService mongoService;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+
+        SpringBeanAutowiringSupport.processInjectionBasedOnServletContext(this, config.getServletContext());
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -35,7 +47,6 @@ public class ReqTrackServlet extends HttpServlet{
         }
         logger.debug("Request information: {}", sb.toString());
 
-        MongoService mongoService = ServiceManager.getInstance().getMongoService();
         mongoService.saveMap("test", ReqTrackDocumentBuilder.buildFromRequest(req));
 
         // check refer
