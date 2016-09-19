@@ -1,5 +1,6 @@
 package com.viifly.wba.service;
 
+import com.google.common.collect.Lists;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.MongoCollection;
@@ -8,6 +9,9 @@ import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -40,6 +44,14 @@ public class MongoServiceImpl implements MongoService{
 
         MongoCollection<Document> collection = database.getCollection(collectionName);
         collection.insertOne(doc);
+    }
+
+    public List<String> listDatabases() {
+        return Lists.newArrayList(mongoClient.listDatabaseNames());
+    }
+
+    public List<String> listCollections(String database) {
+        return Lists.newArrayList(mongoClient.getDatabase(database).listCollectionNames());
     }
 
     /*

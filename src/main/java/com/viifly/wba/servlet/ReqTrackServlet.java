@@ -5,6 +5,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Action1;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -13,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReqTrackServlet extends HttpServlet{
     final static Logger logger = LoggerFactory.getLogger(ReqTrackServlet.class);
@@ -47,7 +52,7 @@ public class ReqTrackServlet extends HttpServlet{
         }
         logger.debug("Request information: {}", sb.toString());
 
-        mongoService.saveMap("test", ReqTrackDocumentBuilder.buildFromRequest(req));
+        saveRequestInformation(req);
 
         // check refer
         String ref = req.getHeader("Referer");
@@ -58,6 +63,31 @@ public class ReqTrackServlet extends HttpServlet{
             resp.setContentType("text/plain;charset=utf-8");
             resp.getOutputStream().write(sb.toString().getBytes());
         }
+
+    }
+
+    private void saveRequestInformation(final HttpServletRequest req) {
+        //mongoService.saveMap("test", ReqTrackDocumentBuilder.buildFromRequest(req));
+
+        Observable<Map<String, String>> myObservable =  Observable.create(new Observable.OnSubscribe<Map<String, String>>(){
+
+            @Override
+            public void call(Subscriber<? super Map<String, String>> subscriber) {
+                Map<String, String> data = ReqTrackDocumentBuilder.buildFromRequest(req);
+                subscriber.onNext(data);
+                subscriber.onCompleted();
+            }
+        });
+
+        Action1<Map<String, String>> saveMongodbAction = new Action1<Map<String, String>>() {
+
+            @Override
+            public void call(Map<String, String> data) {
+                mongoService.saveMap("test", data);
+            }
+        };
+
+        myObservable.subscribe(saveMongodbAction);
 
     }
 }

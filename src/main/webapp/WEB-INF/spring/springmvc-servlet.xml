@@ -13,6 +13,7 @@
 
     <context:component-scan base-package="com.viifly.wba.admin.controller"/>
     <context:component-scan base-package="com.viifly.wba.controller"/>
+    <context:component-scan base-package="com.viifly.wba.mongo.controller"/>
 
     <mvc:annotation-driven />
 

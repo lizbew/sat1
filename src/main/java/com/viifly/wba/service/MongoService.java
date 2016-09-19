@@ -1,5 +1,6 @@
 package com.viifly.wba.service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -9,4 +10,6 @@ import java.util.Map;
 
 public interface MongoService {
     void saveMap(String collectionName, Map<String, String> data);
+    List<String> listDatabases();
+    List<String> listCollections(String database);
 }
